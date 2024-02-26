@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manga List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
+        body {
+            font-family: 'Fira Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #202020; /* Dark background color */
+            color: #fff; /* Light text color */
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        nav {
+            background-color: #2a2a2a; /* Dark nav background color */
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #4ab1cb; /* Blue link color */
+            margin: 0 10px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #2a2a2a; /* Dark card background color */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            overflow: hidden;
+            max-width: 400px;
+            width: 300px;
+            height: 500px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        p {
+            color: #6C757D; /* Gray text color */
+        }
+
+        form button {
+            background-color: #4ab1cb;
+            border: 0;
+            cursor: pointer;
+            padding: 10px;
+            color: #fff;
+            border-radius: 5px;
+        }
+        form button:hover {
+            background-color: #317181;
+        }
+
+        .message{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            top: 0;
+            left: 0;
+        }
+        .message form{
+            width: 400px;
+            height: 200px;
+            display: flex;
+            background-color: #202020;
+            border-radius: 5px;
+            text-align: center;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .message form input{
+            width: calc(100% - 15px);
+            padding: 5px;
+        }
+        .message form input[type=text]{
+            width: calc(100% - 30px);
+            padding: 5px;
+        }
+        .message form input[type=submit]{
+            background-color: #4ab1cb;
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>Manga List</h1>
+        <form action="{% if user.is_authenticated %}logout/{% else %}login/{% endif %}">
+            <button type="submit">{% if user.is_authenticated %}Log Out{% else %}Log In{% endif %}</button>
+        </form>
+    </nav>
+    <div class="card-container">
+        {% for manga in mangas %}
+            <div class="card">
+                <a href="{% if user.is_authenticated %}{% url 'getmanga' manga_id=manga.id %}{% endif %}" onclick="{% if not user.is_authenticated %}popup(){% endif %}">
+                    <img src="{% static 'manhwaCovers/' %}{{ manga.id }}.png" alt="{{ manga.name }} Cover">
+                </a>
+                <div class="card-content">
+                    <a href="{% if user.is_authenticated %}{% url 'getmanga' manga_id=manga.id %}{% endif %}">
+                        <p>{{ manga.name }}</p>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        function popup() {
+            alert('Login Required!');
+        }
+    </script>
+</body>
+</html>
